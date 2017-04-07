@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
+using UnityEngine.SceneManagement;
 
 public class GameLogic : MonoBehaviour {
     [SerializeField]
@@ -145,11 +146,17 @@ public class GameLogic : MonoBehaviour {
         if (databaseHandler.FindPlayerInDb(inputLogin.text, inputPassword.text))
             {
             ChangeInfoPanel("Successfully signed in");
+            Invoke("LoadGame", 1);
             }
         else
             {
             ChangeInfoPanel("Wrong combination of login and password");
             }
+        }
+
+    void LoadGame()
+        {
+        SceneManager.LoadScene("playing");
         }
 
     }
