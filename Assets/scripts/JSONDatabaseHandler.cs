@@ -19,7 +19,7 @@ public class JSONDatabaseHandler : MonoBehaviour {
         databasePath = Application.dataPath + "/" + "database.json";
 
         gameLogic = GameObject.Find("GameSystem").GetComponent<GameLogic>();
-        if (database = initJsonDatabase())
+        if (database = InitJsonDatabase())
             {
             print("Database loaded successfully");
             }
@@ -36,7 +36,7 @@ public class JSONDatabaseHandler : MonoBehaviour {
 	 
 	}
 
-    JSONObject initJsonDatabase()
+    JSONObject InitJsonDatabase()
     {
         try
         {
@@ -52,7 +52,7 @@ public class JSONDatabaseHandler : MonoBehaviour {
         }
     }
 
-    public bool saveJsonDatabase()
+    public bool SaveJsonDatabase()
         {
         try
             {
@@ -68,7 +68,7 @@ public class JSONDatabaseHandler : MonoBehaviour {
         
         }
 
-    public int checkIfLoginAndEmailAvalible(string login, string email)
+    public int CheckIfLoginAndEmailAvalible(string login, string email)
         {
         foreach (JSONObject player in database["players"].list)
             {
@@ -84,7 +84,7 @@ public class JSONDatabaseHandler : MonoBehaviour {
         return 0;
         }
    
-    public bool findPlayerInDb(string login, string pswd)
+    public bool FindPlayerInDb(string login, string pswd)
         {
         foreach (JSONObject player in database["players"].list)
             {

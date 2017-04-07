@@ -26,13 +26,13 @@ public class GameLogic : MonoBehaviour {
 		
 	}
 
-    public void changeInfoPanel(string text, bool enabled=true)
+    public void ChangeInfoPanel(string text, bool enabled=true)
         {
         infoPanelText.text = text;
         infoPanel.SetActive(enabled);
         }
 
-    public void reassignInputs(GameObject panel)
+    public void ReassignInputs(GameObject panel)
         {
         currentPanel = panel;
         try { inputLogin = currentPanel.transform.FindChild("panelInputs").FindChild("inputLogin").gameObject.GetComponent<InputField>();  } catch { print("Login input wasn't reassigned"); };
@@ -40,7 +40,7 @@ public class GameLogic : MonoBehaviour {
         try { inputPassword = currentPanel.transform.FindChild("panelInputs").FindChild("inputPassword").gameObject.GetComponent<InputField>();  } catch { print("Password input wasn't reassigned"); };
 
         }
-    public bool validateEmail(string email)
+    public bool ValidateEmail(string email)
         {
         int indexAt = email.IndexOf("@");
         if (indexAt == 0 || indexAt == email.Length - 1 || indexAt == -1)
@@ -57,7 +57,7 @@ public class GameLogic : MonoBehaviour {
         return true;
         }
 
-    public bool validateLogin(string login)
+    public bool ValidateLogin(string login)
         {
         Regex rx = new Regex(@"^[a-zA-Z0-9]{6,20}$");
         MatchCollection matches = rx.Matches(login);
@@ -69,7 +69,7 @@ public class GameLogic : MonoBehaviour {
         return true;
         }
 
-    public bool validatePassword(string pswd)
+    public bool ValidatePassword(string pswd)
         {
         Regex rx = new Regex(@"^[a-zA-Z0-9]{6,20}$");
         MatchCollection matches = rx.Matches(pswd);
@@ -81,74 +81,74 @@ public class GameLogic : MonoBehaviour {
         return true;
         }
 
-    public void signUp()
+    public void SignUp()
         {
         try
             {
-            reassignInputs(GameObject.Find("panelSignup"));
-            if (!validateLogin(inputLogin.text))
+            ReassignInputs(GameObject.Find("panelSignup"));
+            if (!ValidateLogin(inputLogin.text))
                 {
-                changeInfoPanel("Invalid login");
+                ChangeInfoPanel("Invalid login");
                 return;
                 }
-            if (!validateEmail(inputEmail.text))
+            if (!ValidateEmail(inputEmail.text))
                 {
-                changeInfoPanel("Invalid email");
+                ChangeInfoPanel("Invalid email");
                 return;
                 }
-            if (!validatePassword(inputPassword.text))
+            if (!ValidatePassword(inputPassword.text))
                 {
-                changeInfoPanel("Invalid password");
+                ChangeInfoPanel("Invalid password");
                 return;
                 };
-            switch (databaseHandler.checkIfLoginAndEmailAvalible(inputLogin.text, inputEmail.text))
+            switch (databaseHandler.CheckIfLoginAndEmailAvalible(inputLogin.text, inputEmail.text))
                 {
                 case 0:
                     break;
                 case 1:
-                    changeInfoPanel("Login already is use");
+                    ChangeInfoPanel("Login already is use");
                     return;
                 case 2:
-                    changeInfoPanel("Email already is use");
+                    ChangeInfoPanel("Email already is use");
                     return;
                 }
-            changeInfoPanel("Signing up...");
+            ChangeInfoPanel("Signing up...");
             JSONObject jsonPlayer = new JSONObject();
             jsonPlayer.AddField("login", inputLogin.text);
             jsonPlayer.AddField("email", inputEmail.text);
             jsonPlayer.AddField("password", inputPassword.text);
             JSONObject playersArray = databaseHandler.database["players"];
             playersArray.Add(jsonPlayer);
-            databaseHandler.saveJsonDatabase();
-            changeInfoPanel("Successfully signed up");
+            databaseHandler.SaveJsonDatabase();
+            ChangeInfoPanel("Successfully signed up");
             }
         catch
             {
-            changeInfoPanel("Error while signing up");
+            ChangeInfoPanel("Error while signing up");
             }
 
         }
 
-    public void signIn()
+    public void SignIn()
         {
-        reassignInputs(GameObject.Find("panelAuth"));
-        if (!validateLogin(inputLogin.text))
+        ReassignInputs(GameObject.Find("panelAuth"));
+        if (!ValidateLogin(inputLogin.text))
             {
-            changeInfoPanel("Invalid login");
+            ChangeInfoPanel("Invalid login");
             return;
             }
-        if (!validatePassword(inputPassword.text))
+        if (!ValidatePassword(inputPassword.text))
             {
-            changeInfoPanel("Invalid password");
+            ChangeInfoPanel("Invalid password");
             return;
             }
-        if (databaseHandler.findPlayerInDb(inputLogin.text, inputPassword.text))
+        if (databaseHandler.FindPlayerInDb(inputLogin.text, inputPassword.text))
             {
-            changeInfoPanel("Successfully signed in");
+            ChangeInfoPanel("Successfully signed in");
             }
         else
             {
-            changeInfoPanel("Wrong combination of login and password");
+            ChangeInfoPanel("Wrong combination of login and password");
             }
         }
 
