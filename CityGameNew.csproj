@@ -75,7 +75,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ClientScript V2.cs" />
     <Compile Include="Assets\ClientScript.cs" />
+    <Compile Include="Assets\Compas\CircleBar\Scrips\CircleBar.cs" />
+    <Compile Include="Assets\Compas\CircleBar\Scrips\CircleBarTest.cs" />
     <Compile Include="Assets\ConsoleSript.cs" />
     <Compile Include="Assets\GameLogic.cs" />
     <Compile Include="Assets\JSON\JSONObject.cs" />
@@ -85,6 +88,7 @@
     <Compile Include="Assets\scripts\JSONDatabaseHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Compas\CircleBar\NULLcode Studio.txt" />
     <None Include="Assets\JSON\readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

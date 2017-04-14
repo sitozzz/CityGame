@@ -126,6 +126,7 @@
     <Compile Include="Assets\JSON\Editor\JSONChecker.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Compas\CircleBar\NULLcode Studio.txt" />
     <None Include="Assets\JSON\readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
