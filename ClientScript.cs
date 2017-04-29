@@ -7,10 +7,12 @@ using System.Net;
 using System.Net.Sockets;
 using UnityEngine.UI;
 
-public  class ClientScript : LocationService {
-    
-    
-    public string SendMessageFromSocket()
+public class ClientScript : LocationService
+{
+    public Text Console;
+
+    //public Text Console;
+    public string SendMessageFromSocket(string message)
     {
         string answer;
         int port = 14880;
@@ -24,17 +26,18 @@ public  class ClientScript : LocationService {
         IPHostEntry ipHost = Dns.GetHostEntry("212.104.70.106");
         IPAddress ipAddr = ipHost.AddressList[0];
         IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
-        
+
         Socket sender = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         // Соединяем сокет с удаленной точкой
         sender.Connect(ipEndPoint);
 
         Debug.Log("Введите сообщение: ");
-        string message = "60.32232 56.41140";// longtitudeP + " " + lattitudeP;
+        // longtitudeP + " " + lattitudeP;
 
         Debug.Log("Сокет соединяется с {0} ");
         Debug.Log(sender.RemoteEndPoint.ToString());
+
         byte[] msg = Encoding.UTF8.GetBytes(message);
 
         // Отправляем данные через сокет
@@ -47,7 +50,6 @@ public  class ClientScript : LocationService {
         Debug.Log(Encoding.UTF8.GetString(bytes, 0, bytesRec));
 
         answer = Encoding.UTF8.GetString(bytes, 0, bytesRec);
-       
 
         // Используем рекурсию для неоднократного вызова SendMessageFromSocket()
         // if (message.IndexOf("<TheEnd>") == -1)
@@ -56,12 +58,25 @@ public  class ClientScript : LocationService {
         // Освобождаем сокет
         sender.Shutdown(SocketShutdown.Both);
         sender.Close();
+
         return answer;
+
+    }
+    public string ServerMessage(string s)
+    {
+        string ServerMessage;
+        ServerMessage = SendMessageFromSocket(s);
+        return ServerMessage;
     }
 
-    
+    public void SendMsg()
+    {
+        string Send = ServerMessage("coord "+Instace.longtitudeP + " " +Instace.lattitudeP );
+    }
+
    
+
+
+
+
 }
-
-
-
