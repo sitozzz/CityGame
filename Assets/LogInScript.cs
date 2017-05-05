@@ -6,10 +6,14 @@ using System.Text.RegularExpressions;
 using UnityEngine.SceneManagement;
 
 public class LogInScript : ClientScript {
+    
+    public static LogInScript NickName { get; private set; }
+    public string nick;
+
     [SerializeField]
     GameObject infoPanel;
-
-    JSONDatabaseHandler databaseHandler;
+    
+    //JSONDatabaseHandler databaseHandler;
     InputField inputLogin;
     InputField inputEmail;
     InputField inputPassword;
@@ -19,7 +23,8 @@ public class LogInScript : ClientScript {
     // Use this for initialization
     void Start () {
 		infoPanelText = infoPanel.transform.FindChild("Text").GetComponent<Text>();
-       
+        NickName = this;
+       // DontDestroyOnLoad(gameObject);
         }
 	
 	// Update is called once per frame
@@ -35,6 +40,7 @@ public class LogInScript : ClientScript {
 
     public void ReassignInputs(GameObject panel)
         {
+
         currentPanel = panel;
         try { inputLogin = currentPanel.transform.FindChild("panelInputs").FindChild("inputLogin").gameObject.GetComponent<InputField>();  } catch { print("Login input wasn't reassigned"); };
         try { inputEmail = currentPanel.transform.FindChild("panelInputs").FindChild("inputEmail").gameObject.GetComponent<InputField>();  } catch { print("Email input wasn't reassigned"); };
@@ -81,7 +87,7 @@ public class LogInScript : ClientScript {
         print("Password validation succeed+ " + pswd);
         return true;
         }
-
+    
     public void SignUp()
         {
        
@@ -95,15 +101,23 @@ public class LogInScript : ClientScript {
     public void SignIn()
         {
             ReassignInputs(GameObject.Find("panelAuth"));
-            answServer = ServerMessage("login" + " " + inputLogin.text + " " + inputPassword.text);
+            answServer =ServerMessage("login" + " " + inputLogin.text + " " + inputPassword.text);
             Debug.Log(answServer);
-        if (answServer == "True") { LoadGame(); }
+        if (answServer == "True") { nick = inputLogin.text;     LoadGame(); }
 
         else if (answServer == "False") { Debug.Log(answServer); ChangeInfoPanel("Вас нету в базе данных"); }
         else if(answServer =="GI") { Debug.Log(answServer); ChangeInfoPanel("GI"); }
         
         }
-
+    //private IEnumerator WriteNickName()
+    //{
+    //    if (inputLogin.text.Length > 0)
+    //    {
+    //        nick = inputLogin.text;
+    //        yield break;
+    //    }
+        
+    //}
     void LoadGame()
         {
         SceneManager.LoadScene("playing v2");

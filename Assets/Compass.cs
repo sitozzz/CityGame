@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System;
 
 public class Compass : ClientScript
 {
     [SerializeField]
     public GameObject AimButton;
     public GameObject JustButton;
+    
     public Button button;
     public Button aimbutton;
     public Transform Player;
@@ -15,14 +17,22 @@ public class Compass : ClientScript
     public Quaternion MissionDirection;
     public int distance;
     public int angle;
+   // public string nickN;
     private const int maxDistance = 10000;
     public string msgToServer;
-   
+
     void Start()
     {
-      
-    }
 
+        // GiveNickName();
+        //nickN =  LogInScript.NickName.nick;
+
+        Input.compass.enabled = true;
+        Input.location.Start();
+        
+    }
+    
+    
     public void FindAim()
     {
         ParseData(ServerMessage("FindAim " + Instace.longtitudeP + " " + Instace.lattitudeP));
@@ -43,15 +53,25 @@ public class Compass : ClientScript
         //ServerMessage("coord" + " " + longtitudeP + " " + lattitudeP);
         //ParseData(ServerMessage("coord" + " " + longtitudeP + " " + lattitudeP));
 
-        ParseData(ServerMessage("coord " + Instace.longtitudeP + " " + Instace.lattitudeP));
-        ChangeMissionDirection(angle);
-        Fill(distance);
+        ParseData(ServerMessage(LogInScript.NickName.nick +" "+"coord " + /*Instace.longtitudeP*/ "44.45124"+ " " +"56.45212"/* Instace.lattitudeP*/));
+        Debug.Log(LogInScript.NickName.nick);
+        
+        
+        
+        // ChangeMissionDirection(angle);
+        //Fill(distance);
     }
 
+    void Update()
+    {
+        ChangeMissionDirection(angle + Input.compass.trueHeading);
+        Fill(distance);
+        
 
+    }
     public void TreshFounded()
     {
-        msgToServer = "true";//ServerMessage("TreshFounded");
+        msgToServer = ServerMessage("TreshFounded");
         if (msgToServer == "true")
         {
             JustButton = GameObject.Find("Button");
@@ -76,7 +96,7 @@ public class Compass : ClientScript
         Filling.SetSettings(maxDistance, maxDistance - distance);
     }
 
-    public void ChangeMissionDirection(int angle)
+    public void ChangeMissionDirection(float angle)
     {
         compass.rotation = Quaternion.Euler(0, 0, angle);
     }
