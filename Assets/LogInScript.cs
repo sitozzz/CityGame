@@ -9,7 +9,7 @@ public class LogInScript : ClientScript {
     
     public static LogInScript NickName { get; private set; }
     public string nick;
-
+    public string achivment;
     [SerializeField]
     GameObject infoPanel;
     
@@ -103,8 +103,9 @@ public class LogInScript : ClientScript {
             ReassignInputs(GameObject.Find("panelAuth"));
             answServer =ServerMessage("login" + " " + inputLogin.text + " " + inputPassword.text);
             Debug.Log(answServer);
-        if (answServer == "True") { nick = inputLogin.text;     LoadGame(); }
-
+        if(answServer == "True")  { nick = inputLogin.text; LoadGame(); } 
+        else if (answServer == "True 0") { nick = inputLogin.text;     LoadGame(); }
+        else if( answServer == "True 1") { nick = inputLogin.text; achivment = "1"; LoadGame(); }
         else if (answServer == "False") { Debug.Log(answServer); ChangeInfoPanel("Вас нету в базе данных"); }
         else if(answServer =="GI") { Debug.Log(answServer); ChangeInfoPanel("GI"); }
         

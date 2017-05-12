@@ -26,7 +26,10 @@ public class Compass : ClientScript
 
         // GiveNickName();
         //nickN =  LogInScript.NickName.nick;
-
+        if(LogInScript.NickName.achivment == "1")
+        {
+            TreshFounded("1");
+        }
         Input.compass.enabled = true;
         Input.location.Start();
         
@@ -35,8 +38,8 @@ public class Compass : ClientScript
     
     public void FindAim()
     {
-        ParseData(ServerMessage("FindAim " + Instace.longtitudeP + " " + Instace.lattitudeP));
-        ChangeMissionDirection(angle);
+        ParseData(ServerMessage(LogInScript.NickName.nick + " FindAim " + Instace.longtitudeP + " " + Instace.lattitudeP));
+        ChangeMissionDirection(angle + Input.compass.trueHeading );
         Fill(distance);
     }
 
@@ -52,32 +55,30 @@ public class Compass : ClientScript
     {
         //ServerMessage("coord" + " " + longtitudeP + " " + lattitudeP);
         //ParseData(ServerMessage("coord" + " " + longtitudeP + " " + lattitudeP));
-
-        ParseData(ServerMessage(LogInScript.NickName.nick +" "+"coord " + /*Instace.longtitudeP*/ "44.45124"+ " " +"56.45212"/* Instace.lattitudeP*/));
-        Debug.Log(LogInScript.NickName.nick);
-        
-        
-        
-        // ChangeMissionDirection(angle);
-        //Fill(distance);
+        msgToServer = ServerMessage(LogInScript.NickName.nick + " " + "coord " + Instace.longtitudeP + " " + Instace.lattitudeP);
+        TreshFounded(msgToServer);
+        if (msgToServer != "1")
+        {
+            ParseData(msgToServer);
+           // Fill(distance);
+           // ChangeMissionDirection(angle + Input.compass.trueHeading);
+        }
+       
     }
 
     void Update()
     {
-        ChangeMissionDirection(angle + Input.compass.trueHeading);
+        ChangeMissionDirection(angle - Input.compass.magneticHeading/*trueHeading */);
         Fill(distance);
-        
-
     }
-    public void TreshFounded()
+    public void TreshFounded(string s)
     {
-        msgToServer = ServerMessage("TreshFounded");
-        if (msgToServer == "true")
+       
+        if (s == "1")
         {
             JustButton = GameObject.Find("Button");
             button = JustButton.transform.gameObject.GetComponent<Button>();
             button.interactable = false;
-
             AimButton = GameObject.Find("AimButton");
             aimbutton = AimButton.transform.gameObject.GetComponent<Button>();
             aimbutton.interactable = true;
