@@ -2,13 +2,15 @@
 using System.Collections;
 using UnityEngine.UI;
 using System;
+using System.Collections.Generic;
 
 public class Compass : ClientScript
 {
     [SerializeField]
     public GameObject AimButton;
     public GameObject JustButton;
-    
+    public GameObject Console;
+    public Text console;
     public Button button;
     public Button aimbutton;
     public Transform Player;
@@ -20,13 +22,16 @@ public class Compass : ClientScript
    // public string nickN;
     private const int maxDistance = 10000;
     public string msgToServer;
+    public string aimName;
 
     void Start()
     {
-
+        JustButton = GameObject.Find("Console");
+        console = JustButton.transform.gameObject.GetComponent<Text>();
+        //console.text = "HOBA NA";
         // GiveNickName();
         //nickN =  LogInScript.NickName.nick;
-        if(LogInScript.NickName.achivment == "1")
+        if (LogInScript.NickName.achivment == "1")
         {
             TreshFounded("1");
         }
@@ -56,6 +61,7 @@ public class Compass : ClientScript
         //ServerMessage("coord" + " " + longtitudeP + " " + lattitudeP);
         //ParseData(ServerMessage("coord" + " " + longtitudeP + " " + lattitudeP));
         msgToServer = ServerMessage(LogInScript.NickName.nick + " " + "coord " + Instace.longtitudeP + " " + Instace.lattitudeP);
+
         TreshFounded(msgToServer);
         if (msgToServer != "1")
         {
@@ -70,6 +76,8 @@ public class Compass : ClientScript
     {
         ChangeMissionDirection(angle - Input.compass.magneticHeading/*trueHeading */);
         Fill(distance);
+        
+        
     }
     public void TreshFounded(string s)
     {
@@ -104,38 +112,25 @@ public class Compass : ClientScript
 
     void ParseData(string distanceAndAngle)
     {
-        int space = distanceAndAngle.IndexOf(" ");
-        if (space == -1) { throw new System.Exception("Строка не содержит пробела"); }
-        distance = int.Parse(distanceAndAngle.Substring(0, space));
-        angle = int.Parse(distanceAndAngle.Substring(space + 1, distanceAndAngle.Length - (space + 1)));
-        //Debug.Log(distance + " " + angle);
+        var word = new List<String>();
+        int pos = 0;
+        int start = 0;
+        do
+        {
+            pos = distanceAndAngle.IndexOf(' ', start);
+            if (pos >= 0)
+            {
+                word.Add(distanceAndAngle.Substring(start, pos - start).Trim());
+                start = pos + 1;
+            }
+            } while (pos > 0) ;
+  
+        console.text = "Текущая цель: " + word[2];
+        distance = int.Parse(word[0]);
+        angle = int.Parse(word[1]);
+        
     }
 
 }
-
-
-
-/*Filling.SetSettings(100, 50); // кроме макс. значения, так же указываем текущее, это полезно когда настройки загружаются
-Filling.SetDefault(10); // по умолчанию, нужно указать только макс. возможное значение
-Debug.Log("Текущее значение: " + Filling.currentValue);*/
-
-/*Vector3 dir = target.position;
-        MissionDirection = Quaternion.LookRotation(dir);
-        MissionDirection.z = -MissionDirection.y;
-        MissionDirection.x = 0;//Блок поворота по x
-        MissionDirection.y = 0;//Блок поворота по y
-        compass.localRotation = MissionDirection;*/
-
-/*// прибавить или убавить
-   if (Input.GetMouseButtonDown(0))
-   {
-       Filling.AdjustCurrentValue(10);
-   }
-   else if (Input.GetMouseButtonDown(1))
-   {
-       Filling.AdjustCurrentValue(-10);
-   }*/
-
-
 
 
