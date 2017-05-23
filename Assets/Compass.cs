@@ -9,18 +9,19 @@ public class Compass : ClientScript
     [SerializeField]
     public GameObject AimButton;
     public GameObject JustButton;
+    public GameObject GhostSkill;
     public GameObject Console;
     public Text console;
     public Button button;
     public Button aimbutton;
+    public Button ghostButton;
     public Transform Player;
     public Transform target;
     public RectTransform compass;
     public Quaternion MissionDirection;
     public int distance;
     public int angle;
-   // public string nickN;
-    private const int maxDistance = 10000;
+    private const int maxDistance = 1000;
     public string msgToServer;
     public string aimName;
 
@@ -28,16 +29,17 @@ public class Compass : ClientScript
     {
         JustButton = GameObject.Find("Console");
         console = JustButton.transform.gameObject.GetComponent<Text>();
-        //console.text = "HOBA NA";
-        // GiveNickName();
-        //nickN =  LogInScript.NickName.nick;
         if (LogInScript.NickName.achivment == "1")
         {
-            TreshFounded("1");
+            TreshFounded("Usual_TRUE");
         }
         Input.compass.enabled = true;
         Input.location.Start();
-        
+        console.text = "Zdarova";
+        GhostSkill = GameObject.Find("Ghost");
+        ghostButton = GhostSkill.transform.gameObject.GetComponent<Button>();
+        ghostButton.interactable = false;
+
     }
     
     
@@ -58,31 +60,26 @@ public class Compass : ClientScript
     }
     public void Parsinng()
     {
-        //ServerMessage("coord" + " " + longtitudeP + " " + lattitudeP);
-        //ParseData(ServerMessage("coord" + " " + longtitudeP + " " + lattitudeP));
+        
         msgToServer = ServerMessage(LogInScript.NickName.nick + " " + "coord " + Instace.longtitudeP + " " + Instace.lattitudeP);
-
+        //Проверка игрового предмета №1
         TreshFounded(msgToServer);
-        if (msgToServer != "1")
+        //Провера игрового предмета №2
+        GhostFounded(msgToServer);
+        if (msgToServer != "Usual_TRUE"|| msgToServer != "Ghost_TRUE")
         {
-            ParseData(msgToServer);
-           // Fill(distance);
-           // ChangeMissionDirection(angle + Input.compass.trueHeading);
+            ParseData(msgToServer);  
         }
-       
     }
 
     void Update()
     {
         ChangeMissionDirection(angle - Input.compass.magneticHeading/*trueHeading */);
         Fill(distance);
-        
-        
     }
     public void TreshFounded(string s)
     {
-       
-        if (s == "1")
+        if (s == "Usual_TRUE")
         {
             JustButton = GameObject.Find("Button");
             button = JustButton.transform.gameObject.GetComponent<Button>();
@@ -90,14 +87,30 @@ public class Compass : ClientScript
             AimButton = GameObject.Find("AimButton");
             aimbutton = AimButton.transform.gameObject.GetComponent<Button>();
             aimbutton.interactable = true;
-            //button.interactable = false; 
-            //  AimButton.SetActive(true);
                 }
     }
+    public void GhostFounded(string s)
+    {
+        if(s == "Ghost_TRUE")
+        {
+            GhostSkill = GameObject.Find("Ghost");
+            ghostButton = GhostSkill.transform.gameObject.GetComponent<Button>();
+            ghostButton.interactable = true;
+        }
 
+    }
+    public void Ghost()
+    {
+        msgToServer = ServerMessage(LogInScript.NickName.nick + " " + "Ghost " +"VJUH");
+        if(msgToServer == "Вы_успешно_скрыли_свои_координаты ")
+        {
+            console.text = "Вы успешно скрыли свое местоположение";
+        }
+
+    }
     public void Fill(int distance)
     {
-        //Максимальная Дистанция 10000 метров 
+        //Максимальная Дистанция 1000 метров 
         if (distance > maxDistance)
         {
             distance = maxDistance;
@@ -109,7 +122,7 @@ public class Compass : ClientScript
     {
         compass.rotation = Quaternion.Euler(0, 0, angle);
     }
-
+    //Парсинг ответов от сервера
     void ParseData(string distanceAndAngle)
     {
         var word = new List<String>();
@@ -124,10 +137,16 @@ public class Compass : ClientScript
                 start = pos + 1;
             }
             } while (pos > 0) ;
-  
-        console.text = "Текущая цель: " + word[2];
-        distance = int.Parse(word[0]);
-        angle = int.Parse(word[1]);
+        if (word[0] != "Ваша_цель_скрыла_свои_координаты ")
+        {
+            console.text = "Текущая цель: " + word[2];
+            distance = int.Parse(word[0]);
+            angle = int.Parse(word[1]);
+        }
+        else
+        {
+            console.text = "Ваша цель скрыла свои координаты";
+        }
         
     }
 
