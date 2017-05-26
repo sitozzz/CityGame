@@ -137,6 +137,7 @@ public class Compass : ClientScript
                 start = pos + 1;
             }
             } while (pos > 0) ;
+        console.text = word[0];
         if (word[0] != "Ваша_цель_скрыла_свои_координаты ")
         {
             console.text = "Текущая цель: " + word[2];
